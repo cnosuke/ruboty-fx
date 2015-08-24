@@ -7,7 +7,7 @@ module Ruboty
 
       on /fx( me)? ?(?<pair>.+)?/, name: 'fx', description: 'Show current currency.'
 
-      def self.fx(message = {})
+      def fx(message = {})
         pair = message[:pair].gsub('/','').gsub(/\s/,'')
         data = JSON.parse( RestClient.post(YFX_URL, nil) || '{}' )
 
