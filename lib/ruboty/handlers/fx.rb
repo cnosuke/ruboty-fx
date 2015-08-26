@@ -10,15 +10,30 @@ module Ruboty
 
       def fx(message = {})
         pair = message[:pair].gsub('/','').gsub(/\s/,'')
-        data = JSON.parse( RestClient.post(YFX_URL, nil) || '{}' )
-
-        result_str = data[pair].map{|k,v| "#{k}: #{v}" }.join(', ')
-        message.reply("[#{pair.scan(/\w{3}/).join('/')}] #{result_str}")
+        message.reply(rate_to_s(get_json[pair], pair))
       rescue
         message.reply('Unknow error.')
       end
 
       def list(m = {})
+        str = get_json.map do |pair, state|
+          rate_to_s(state, pair)
+        end.join("\n")
+
+        m.reply("```\n#{str}\n```")
+      rescue
+        m.reply('Unknow error.')
+      end
+
+      private
+
+      def get_json
+        JSON.parse( RestClient.post(YFX_URL, nil) || '{}' )
+      end
+
+      def rate_to_s(state, pair)
+        result_str = state.map{|k,v| "#{k}: #{v}" }.join(",\t")
+        "[#{pair.scan(/\w{3}/).join('/')}] #{result_str}"
       end
     end
   end
