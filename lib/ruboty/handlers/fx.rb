@@ -5,8 +5,8 @@ module Ruboty
     class Fx < Base
       YFX_URL = 'http://info.finance.yahoo.co.jp/fx/async/getRate/'
 
+      on /list( me)? fx/, name: 'list', description: 'List  current currencies.'
       on /fx( me)? ?(?<pair>.+)?/, name: 'fx', description: 'Show current currency.'
-      on /fx( me)? list/, name: 'list', description: 'List  current currencies.'
 
       def fx(message = {})
         pair = message[:pair].gsub('/','').gsub(/\s/,'')
